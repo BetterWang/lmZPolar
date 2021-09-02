@@ -1,0 +1,11 @@
+txt/
+*.swp
+*.pdf
+test*.C
+*_C.C
+*.root
+*.so
+*.d
+*.pcm
+*.cxx_tmp
+.DS_Store
