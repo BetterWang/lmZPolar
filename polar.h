@@ -107,9 +107,9 @@ struct PolarData {
         }
     };
 
-    void Fill(const PolarEvent& evt) {
+    int Fill(const PolarEvent& evt) {
         hCent_->Fill(evt.Cent);
-        if ( evt.Cent >= CentPbPb2018[NCentPbPb2018] ) return;
+        if ( evt.Cent >= CentPbPb2018[NCentPbPb2018] ) return 2;
 
         int cent = 0;
         while ( int(evt.Cent) >= CentPbPb2018[cent+1] ) cent++;
@@ -131,6 +131,13 @@ struct PolarData {
         std::complex rpHFp3   ( (*evt.EPFlatCos)[hi::HFp3],      (*evt.EPFlatSin)[hi::HFp3] );
         std::complex rpHFm3   ( (*evt.EPFlatCos)[hi::HFm3],      (*evt.EPFlatSin)[hi::HFm3] );
         std::complex rpTrkMid3( (*evt.EPFlatCos)[hi::trackmid3], (*evt.EPFlatSin)[hi::trackmid3] );
+
+        if ( TMath::IsNaN(rpHFp2.real()) or TMath::IsNaN(rpHFp2.imag()) )       {std::cout << " ---> rpHFp2 NaN" << std::endl;    return 1; }
+        if ( TMath::IsNaN(rpHFp3.real()) or TMath::IsNaN(rpHFp3.imag()) )       {std::cout << " ---> rpHFp3 NaN" << std::endl;    return 1; }
+        if ( TMath::IsNaN(rpHFm2.real()) or TMath::IsNaN(rpHFm2.imag()) )       {std::cout << " ---> rpHFm2 NaN" << std::endl;    return 1; }
+        if ( TMath::IsNaN(rpHFm3.real()) or TMath::IsNaN(rpHFm3.imag()) )       {std::cout << " ---> rpHFm3 NaN" << std::endl;    return 1; }
+        if ( TMath::IsNaN(rpTrkMid2.real()) or TMath::IsNaN(rpTrkMid2.imag()) ) {std::cout << " ---> rpTrkMid2 NaN" << std::endl; return 1; }
+        if ( TMath::IsNaN(rpTrkMid3.real()) or TMath::IsNaN(rpTrkMid3.imag()) ) {std::cout << " ---> rpTrkMid3 NaN" << std::endl; return 1; }
 
         hReHFp2HFm2_->Fill( evt.Cent, (rpHFp2*std::conj(rpHFm2)).real() );
         hImHFp2HFm2_->Fill( evt.Cent, (rpHFp2*std::conj(rpHFm2)).imag() );
@@ -200,6 +207,7 @@ struct PolarData {
             }
         }
         hNLambda_[cent]->Fill(NLm);
+        return 0;
     }
 
     void Write() {

@@ -60,7 +60,10 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
 
         int s2 = ievt%s3;
         data[s2]->Fill(evt);
-        data[s3]->Fill(evt);
+        int ret = data[s3]->Fill(evt);
+        if ( ret == 1 ) {
+            std::cout << " ---> Failed event in " << chV->GetFile()->GetName() << " RunId = " << evt.RunId << " Lumi = " << evt.Lumi << " EventId = " << evt.EventId << std::endl;
+        }
     }
 
     TFile * fwrite = new TFile(Form("%s/output_%i.root", ftxt[s1], s3), "recreate");
@@ -69,5 +72,4 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
         dir->cd();
         data[i]->Write();
     }
-
 }
