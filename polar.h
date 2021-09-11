@@ -76,10 +76,10 @@ struct PolarData {
             hHF2pF_[cent] = new TH1D((name_+Form("hHF2pF_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/2., TMath::Pi()/2.);
             hHF2mF_[cent] = new TH1D((name_+Form("hHF2mF_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/2., TMath::Pi()/2.);
 
-            hHF3pO_[cent] = new TH1D((name_+Form("hHF3pO_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/2., TMath::Pi()/2.);
-            hHF3mO_[cent] = new TH1D((name_+Form("hHF3mO_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/2., TMath::Pi()/2.);
-            hHF3pF_[cent] = new TH1D((name_+Form("hHF3pF_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/2., TMath::Pi()/2.);
-            hHF3mF_[cent] = new TH1D((name_+Form("hHF3mF_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/2., TMath::Pi()/2.);
+            hHF3pO_[cent] = new TH1D((name_+Form("hHF3pO_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/3., TMath::Pi()/3.);
+            hHF3mO_[cent] = new TH1D((name_+Form("hHF3mO_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/3., TMath::Pi()/3.);
+            hHF3pF_[cent] = new TH1D((name_+Form("hHF3pF_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/3., TMath::Pi()/3.);
+            hHF3mF_[cent] = new TH1D((name_+Form("hHF3mF_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 72, -TMath::Pi()/3., TMath::Pi()/3.);
 
             hNLambda_[cent] = new TH1D((name_+Form("hNLambda_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 20, 0, 20);
             hLambdaEta_[cent] = new TH1D((name_+Form("hLambdaEta_%i", cent)).c_str(), Form("CentBin %i-%i", CentPbPb2018[cent], CentPbPb2018[cent+1]), 50, -2.5, 2.5);
@@ -263,6 +263,7 @@ struct PolarData {
 
     std::string name_;
     bool    bForward_;
+
     TH1D*   hCent_;
 
     TH1D*   hHF2pO_[NCentPbPb2018];
