@@ -67,7 +67,7 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
     }
 
     TFile * fwrite = new TFile(Form("%s/output_%i.root", ftxt[s1], s3), "recreate");
-    for ( int i = 0; i <= s3; i++ ) {
+    for ( int i = s3; i <= s3; i++ ) {
         auto dir = fwrite->mkdir(Form("output_%i_%i", i, s3));
         dir->cd();
         data[i]->Write();
