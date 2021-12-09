@@ -6,11 +6,33 @@
 
 using namespace std;
 
+extern int NCent;
+extern const Int_t * CentBins;
+
 void process(int s1 = 0, int s3 = 10, int sVz = 0)
 {
     cout << " s1 = " << s1 << " s3 = " << s3 << endl;
     TH1::SetDefaultSumw2();
     addchain(s1);
+
+    if ( bPbPb ) {
+        NCent = NCentPbPb2018;
+        CentBins = CentPbPb2018;
+    } else if ( bpPb ) {
+        NCent = NCentpPb2016;
+        CentBins = CentNoffCutPA8TeV4;
+    }
+    if ( bPbPb ) {
+        cout << "  --> PbPb" << endl;
+    }
+    if ( bpPb ) {
+        cout << "  --> pPb";
+        if ( bpPbReverse ) {
+            cout << " reverse" << endl;
+        } else {
+            cout << endl;
+        }
+    }
 
     PolarEvent evt;
 
@@ -54,6 +76,7 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
     }
 
     int ievt = 0;
+    cout << "  --> Start processing" << endl;
     while ( chV->GetEntry(ievt++) )
     {
         if ( !(ievt%1000000) ) cout << "!! ievt = " << ievt << endl;
