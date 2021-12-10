@@ -7,7 +7,7 @@
 using namespace std;
 
 extern int NCent;
-extern const Int_t * CentBins;
+extern const double* CentBins;
 
 void process(int s1 = 0, int s3 = 10, int sVz = 0)
 {
