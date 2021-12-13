@@ -111,10 +111,8 @@ bool bPbPb = false;
 bool bpPb = false;
 bool bpPbReverse = false;
 
-void addchain(int s1)
+void setFlags(int s1)
 {
-    std::cout << fname[s1] << std::endl;
-    chV->Add(Form("%s/*.root/tree/trV", fname[s1]));
     TString tt(fname[s1]);
     if ( tt.Contains("PbPb2018") ) bPbPb = true;
     if ( tt.Contains("PA_Polar") ) {
@@ -125,4 +123,11 @@ void addchain(int s1)
             bpPbReverse = false;
         }
     }
+}
+
+void addchain(int s1)
+{
+    std::cout << fname[s1] << std::endl;
+    chV->Add(Form("%s/*.root/tree/trV", fname[s1]));
+    setFlags(s1);
 }
