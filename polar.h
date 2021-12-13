@@ -95,7 +95,11 @@ struct PolarData {
     {
         name_ = name;
         bForward_ = bFwd;
-        hCent_ = new TH1D((name_+"hCent").c_str(), "hCent", 600, 0, 600);
+        if ( bpPb ) {
+            hCent_ = new TH1D((name_+"hCent").c_str(), "hCent", 600, 0, 600);
+        } else {
+            hCent_ = new TH1D((name_+"hCent").c_str(), "hCent", 200, 0, 200);
+        }
 
         hReHFp2HFm2_    = new TH1D((name_+"hReHFp2HFm2").c_str(),    "hReHFp2HFm2",    NCent, CentBins);
         hReHFp2TrkMid2_ = new TH1D((name_+"hReHFp2TrkMid2").c_str(), "hReHFp2TrkMid2", NCent, CentBins);
