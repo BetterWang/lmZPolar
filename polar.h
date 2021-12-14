@@ -91,7 +91,23 @@ struct PolarData {
     hLamBarF2Cos2_(NCent, vector<TH1D*>(NpT)),
     hLamBarF3MCos_(NCent, vector<TH1D*>(NpT)),
     hLamBarF2PCos_(NCent, vector<TH1D*>(NpT)),
-    hLamBarF3PCos_(NCent, vector<TH1D*>(NpT))
+    hLamBarF3PCos_(NCent, vector<TH1D*>(NpT)),
+    hLambdaPV2M_(NCent, vector<TH1D*>(NpT)),
+    hLambdaMV2P_(NCent, vector<TH1D*>(NpT)),
+    hLambdaFV2M_(NCent, vector<TH1D*>(NpT)),
+    hLambdaFV2P_(NCent, vector<TH1D*>(NpT)),
+    hLamBarPV2M_(NCent, vector<TH1D*>(NpT)),
+    hLamBarMV2P_(NCent, vector<TH1D*>(NpT)),
+    hLamBarFV2M_(NCent, vector<TH1D*>(NpT)),
+    hLamBarFV2P_(NCent, vector<TH1D*>(NpT)),
+    hLambdaPV3M_(NCent, vector<TH1D*>(NpT)),
+    hLambdaMV3P_(NCent, vector<TH1D*>(NpT)),
+    hLambdaFV3M_(NCent, vector<TH1D*>(NpT)),
+    hLambdaFV3P_(NCent, vector<TH1D*>(NpT)),
+    hLamBarPV3M_(NCent, vector<TH1D*>(NpT)),
+    hLamBarMV3P_(NCent, vector<TH1D*>(NpT)),
+    hLamBarFV3M_(NCent, vector<TH1D*>(NpT)),
+    hLamBarFV3P_(NCent, vector<TH1D*>(NpT))
     {
         name_ = name;
         bForward_ = bFwd;
@@ -160,6 +176,24 @@ struct PolarData {
                 hLamBarF3MCos_[cent][ipt] = new TH1D((name_+Form("hLamBarF3MCos_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
                 hLamBarF2PCos_[cent][ipt] = new TH1D((name_+Form("hLamBarF2PCos_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
                 hLamBarF3PCos_[cent][ipt] = new TH1D((name_+Form("hLamBarF3PCos_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+
+                hLambdaPV2M_[cent][ipt] = new TH1D((name_+Form("hLambdaPV2M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaMV2P_[cent][ipt] = new TH1D((name_+Form("hLambdaMV2P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaFV2M_[cent][ipt] = new TH1D((name_+Form("hLambdaFV2M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaFV2P_[cent][ipt] = new TH1D((name_+Form("hLambdaFV2P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarPV2M_[cent][ipt] = new TH1D((name_+Form("hLamBarPV2M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarMV2P_[cent][ipt] = new TH1D((name_+Form("hLamBarMV2P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarFV2M_[cent][ipt] = new TH1D((name_+Form("hLamBarFV2M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarFV2P_[cent][ipt] = new TH1D((name_+Form("hLamBarFV2P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+
+                hLambdaPV3M_[cent][ipt] = new TH1D((name_+Form("hLambdaPV3M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaMV3P_[cent][ipt] = new TH1D((name_+Form("hLambdaMV3P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaFV3M_[cent][ipt] = new TH1D((name_+Form("hLambdaFV3M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaFV3P_[cent][ipt] = new TH1D((name_+Form("hLambdaFV3P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarPV3M_[cent][ipt] = new TH1D((name_+Form("hLamBarPV3M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarMV3P_[cent][ipt] = new TH1D((name_+Form("hLamBarMV3P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarFV3M_[cent][ipt] = new TH1D((name_+Form("hLamBarFV3M_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarFV3P_[cent][ipt] = new TH1D((name_+Form("hLamBarFV3P_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
             }
         }
     };
@@ -238,6 +272,9 @@ struct PolarData {
             double Dphi_m3 = (*evt.phi)[i] - (*evt.EPFlat)[HFm3] ;
             double Dphi_p3 = (*evt.phi)[i] - (*evt.EPFlat)[HFp3] ;
 
+            std::complex Q2(TMath::Cos(2.*(*evt.phi)[i]), TMath::Sin(2.*(*evt.phi)[i]));
+            std::complex Q3(TMath::Cos(3.*(*evt.phi)[i]), TMath::Sin(3.*(*evt.phi)[i]));
+
             if ( (*evt.pdgId)[i] == 3122 ) {
                 // Lambda
                 double cosTheta = (*evt.pPzCM)[i] / sqrt( (*evt.pPzCM)[i]*(*evt.pPzCM)[i] + (*evt.pPxCM)[i]*(*evt.pPxCM)[i] + (*evt.pPyCM)[i]*(*evt.pPyCM)[i] );
@@ -247,17 +284,25 @@ struct PolarData {
                     hLambdaP2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );
                     hLambdaP2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLambdaP3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_m3 ) );
+                    hLambdaPV2M_  [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFm2)).real() );
+                    hLambdaPV3M_  [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFm3)).real() );
                 } else {
                     // M-side
                     hLambdaM2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_p2 ) );
                     hLambdaM2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLambdaM3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_p3 ) );
+                    hLambdaMV2P_  [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFp2)).real() );
+                    hLambdaMV3P_  [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFp3)).real() );
                 }
                 hLambdaF2MCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );
                 hLambdaF2Cos2_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                 hLambdaF3MCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_m3 ) );
                 hLambdaF2PCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_p2 ) );
                 hLambdaF3PCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_p3 ) );
+                hLambdaFV2M_   [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFm2)).real() );
+                hLambdaFV3M_   [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFm3)).real() );
+                hLambdaFV2P_   [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFp2)).real() );
+                hLambdaFV3P_   [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFp3)).real() );
             }
             if ( (*evt.pdgId)[i] == -3122 ) {
                 // anti-Lambda
@@ -268,17 +313,25 @@ struct PolarData {
                     hLamBarP2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );
                     hLamBarP2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLamBarP3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_m3 ) );
+                    hLamBarPV2M_  [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFm2)).real() );
+                    hLamBarPV3M_  [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFm3)).real() );
                 } else {
                     // M-side
                     hLamBarM2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_p2 ) );
                     hLamBarM2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLamBarM3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_p3 ) );
+                    hLamBarMV2P_  [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFp2)).real() );
+                    hLamBarMV3P_  [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFp3)).real() );
                 }
                 hLamBarF2MCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );
                 hLamBarF2Cos2_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                 hLamBarF3MCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_m3 ) );
                 hLamBarF2PCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_p2 ) );
                 hLamBarF3PCos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_p3 ) );
+                hLamBarFV2M_   [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFm2)).real() );
+                hLamBarFV3M_   [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFm3)).real() );
+                hLamBarFV2P_   [cent][ipt]->Fill( (*evt.mass)[i], (Q2*std::conj(rpHFp2)).real() );
+                hLamBarFV3P_   [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFp3)).real() );
             }
         }
         hNLambda_[cent]->Fill(NLm);
@@ -344,6 +397,15 @@ struct PolarData {
                 hLamBarF3MCos_[cent][ipt]->Write(Form("hLamBarF3MCos_%i_%i", cent, ipt));
                 hLamBarF2PCos_[cent][ipt]->Write(Form("hLamBarF2PCos_%i_%i", cent, ipt));
                 hLamBarF3PCos_[cent][ipt]->Write(Form("hLamBarF3PCos_%i_%i", cent, ipt));
+
+                hLambdaPV2M_[cent][ipt]->Write(Form("hLambdaPV2M_%i_%i", cent, ipt));
+                hLambdaMV2P_[cent][ipt]->Write(Form("hLambdaMV2P_%i_%i", cent, ipt));
+                hLambdaFV2M_[cent][ipt]->Write(Form("hLambdaFV2M_%i_%i", cent, ipt));
+                hLambdaFV2P_[cent][ipt]->Write(Form("hLambdaFV2P_%i_%i", cent, ipt));
+                hLamBarPV2M_[cent][ipt]->Write(Form("hLamBarPV2M_%i_%i", cent, ipt));
+                hLamBarMV2P_[cent][ipt]->Write(Form("hLamBarMV2P_%i_%i", cent, ipt));
+                hLamBarFV2M_[cent][ipt]->Write(Form("hLamBarFV2M_%i_%i", cent, ipt));
+                hLamBarFV2P_[cent][ipt]->Write(Form("hLamBarFV2P_%i_%i", cent, ipt));
             }
         }
     }
@@ -409,5 +471,24 @@ struct PolarData {
     vector<vector<TH1D*>>   hLamBarF3MCos_ ;
     vector<vector<TH1D*>>   hLamBarF2PCos_ ;
     vector<vector<TH1D*>>   hLamBarF3PCos_ ;
+
+    // v2
+    vector<vector<TH1D*>>   hLambdaPV2M_;
+    vector<vector<TH1D*>>   hLambdaMV2P_;
+    vector<vector<TH1D*>>   hLambdaFV2M_;
+    vector<vector<TH1D*>>   hLambdaFV2P_;
+    vector<vector<TH1D*>>   hLamBarPV2M_;
+    vector<vector<TH1D*>>   hLamBarMV2P_;
+    vector<vector<TH1D*>>   hLamBarFV2M_;
+    vector<vector<TH1D*>>   hLamBarFV2P_;
+
+    vector<vector<TH1D*>>   hLambdaPV3M_;
+    vector<vector<TH1D*>>   hLambdaMV3P_;
+    vector<vector<TH1D*>>   hLambdaFV3M_;
+    vector<vector<TH1D*>>   hLambdaFV3P_;
+    vector<vector<TH1D*>>   hLamBarPV3M_;
+    vector<vector<TH1D*>>   hLamBarMV3P_;
+    vector<vector<TH1D*>>   hLamBarFV3M_;
+    vector<vector<TH1D*>>   hLamBarFV3P_;
 };
 

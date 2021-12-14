@@ -36,8 +36,8 @@ char const * fname[] = {
     "../PA_Polar/PAHighMultiplicity2/crab_PAHM2_LmPolarTree_HM185_v2/211210_192534/0000/",           // 33 PA HM2 185
     "../PA_Polar/PAHighMultiplicity3/crab_PAHM3_LmPolarTree_HM185_v2/211213_151530/0000/",           // 34 PA HM3 185
     "../PA_Polar/PAHighMultiplicity4/crab_PAHM4_LmPolarTree_HM185_v2/211213_153835/0000/",           // 35 PA HM4 185
-    "",           // 36 PA HM5 185
-    "",           // 37 PA HM6 185
+    "../PA_Polar/PAHighMultiplicity5/crab_PAHM5_LmPolarTree_HM185_v2/211214_172417/0000/",           // 36 PA HM5 185
+    "../PA_Polar/PAHighMultiplicity6/crab_PAHM6_LmPolarTree_HM185_v2/211214_190901/0000/",           // 37 PA HM6 185
     "",           // 38 PA HM7 250
     "",           // 39 PA HM0 120 reverse
     "",           // 40 PA HM0 150 reverse
