@@ -422,6 +422,15 @@ struct PolarData {
                 hLamBarMV2P_[cent][ipt]->Write(Form("hLamBarMV2P_%i_%i", cent, ipt));
                 hLamBarFV2M_[cent][ipt]->Write(Form("hLamBarFV2M_%i_%i", cent, ipt));
                 hLamBarFV2P_[cent][ipt]->Write(Form("hLamBarFV2P_%i_%i", cent, ipt));
+
+                hLambdaPV3M_[cent][ipt]->Write(Form("hLambdaPV3M_%i_%i", cent, ipt));
+                hLambdaMV3P_[cent][ipt]->Write(Form("hLambdaMV3P_%i_%i", cent, ipt));
+                hLambdaFV3M_[cent][ipt]->Write(Form("hLambdaFV3M_%i_%i", cent, ipt));
+                hLambdaFV3P_[cent][ipt]->Write(Form("hLambdaFV3P_%i_%i", cent, ipt));
+                hLamBarPV3M_[cent][ipt]->Write(Form("hLamBarPV3M_%i_%i", cent, ipt));
+                hLamBarMV3P_[cent][ipt]->Write(Form("hLamBarMV3P_%i_%i", cent, ipt));
+                hLamBarFV3M_[cent][ipt]->Write(Form("hLamBarFV3M_%i_%i", cent, ipt));
+                hLamBarFV3P_[cent][ipt]->Write(Form("hLamBarFV3P_%i_%i", cent, ipt));
             }
         }
     }

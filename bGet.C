@@ -1,31 +1,55 @@
 #include "label.h"
 #include "const.h"
+#include "complex"
 
 #include <TH1D.h>
 #include <TFile.h>
+
+bool bDebug = false;
 
 void bGet(int s1 = 0, int s3 = 10)
 {
     std::cout << " s1 = " << s1 << " s3 = " << s3 << std::endl;
     TH1::SetDefaultSumw2();
+    setFlags(s1);
+
+    int NCent = 0;
+    const double* CentBins = nullptr;
+    if ( bPbPb ) {
+        NCent = NCentPbPb2018;
+        CentBins = CentPbPb2018;
+    } else if ( bpPb ) {
+        NCent = NCentpPb2016;
+        CentBins = CentNoffCutPA8TeV4;
+    }
+    if ( bPbPb ) {
+        cout << "  --> PbPb" << endl;
+    }
+    if ( bpPb ) {
+        cout << "  --> pPb";
+        if ( bpPbReverse ) {
+            cout << " reverse" << endl;
+        } else {
+            cout << endl;
+        }
+    }
 
     TFile* f = new TFile(Form("%s/output_%i.root", ftxt[s1], s3));
 
     //
-    TH1D*   hCent_ = 0;
-    TH1D*   hCent2_ = 0;
+    TH1D*   hCent_ = nullptr;
+    TH1D*   hCent2_ = nullptr;
 
-    TH1D*   hHF2pO_[NCentPbPb2018] = {};
-    TH1D*   hHF2mO_[NCentPbPb2018] = {};
-    TH1D*   hHF2pF_[NCentPbPb2018] = {};
-    TH1D*   hHF2mF_[NCentPbPb2018] = {};
-    TH1D*   hHF3pO_[NCentPbPb2018] = {};
-    TH1D*   hHF3mO_[NCentPbPb2018] = {};
-    TH1D*   hHF3pF_[NCentPbPb2018] = {};
-    TH1D*   hHF3mF_[NCentPbPb2018] = {};
-
-    TH1D*   hNLambda_[NCentPbPb2018] = {};
-    TH1D*   hLambdaEta_[NCentPbPb2018] = {};
+    vector<TH1D*>   hHF2pO_    (NCent);
+    vector<TH1D*>   hHF2mO_    (NCent);
+    vector<TH1D*>   hHF2pF_    (NCent);
+    vector<TH1D*>   hHF2mF_    (NCent);
+    vector<TH1D*>   hHF3pO_    (NCent);
+    vector<TH1D*>   hHF3mO_    (NCent);
+    vector<TH1D*>   hHF3pF_    (NCent);
+    vector<TH1D*>   hHF3mF_    (NCent);
+    vector<TH1D*>   hNLambda_  (NCent);
+    vector<TH1D*>   hLambdaEta_(NCent);
 
     TH1D*   hReHFp2HFm2_    = 0;
     TH1D*   hReHFp2TrkMid2_ = 0;
@@ -41,59 +65,108 @@ void bGet(int s1 = 0, int s3 = 10)
     TH1D*   hImHFp3TrkMid3_ = 0;
     TH1D*   hImHFm3TrkMid3_ = 0;
 
+    TH1D*   hHF2pRes_ = 0;
+    TH1D*   hHF2mRes_ = 0;
+    TH1D*   hHF3pRes_ = 0;
+    TH1D*   hHF3mRes_ = 0;
+
     // Lm mass binning
-    TH1D*   hLambdaMass_[NCentPbPb2018][NpT] = {};
-    TH1D*   hLamBarMass_[NCentPbPb2018][NpT] = {};
+    vector<vector<TH1D*>>   hLambdaMass_   (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarMass_   (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaMassP_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarMassP_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaMassM_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarMassM_  (NCent, vector<TH1D*>(NpT));
 
-    TH1D*   hLambdaP2Cos_ [NCentPbPb2018][NpT] = {};
-    TH1D*   hLambdaP2Cos2_[NCentPbPb2018][NpT] = {};
-    TH1D*   hLamBarP2Cos_ [NCentPbPb2018][NpT] = {};
-    TH1D*   hLamBarP2Cos2_[NCentPbPb2018][NpT] = {};
-    TH1D*   hLambdaM2Cos_ [NCentPbPb2018][NpT] = {};
-    TH1D*   hLambdaM2Cos2_[NCentPbPb2018][NpT] = {};
-    TH1D*   hLamBarM2Cos_ [NCentPbPb2018][NpT] = {};
-    TH1D*   hLamBarM2Cos2_[NCentPbPb2018][NpT] = {};
+    vector<vector<TH1D*>>   hLambdaP2Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaP2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarP2Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarP2Cos2_ (NCent, vector<TH1D*>(NpT));
 
-    TH1D*   hLambdaP3Cos_ [NCentPbPb2018][NpT] = {};
-    TH1D*   hLamBarP3Cos_ [NCentPbPb2018][NpT] = {};
-    TH1D*   hLambdaM3Cos_ [NCentPbPb2018][NpT] = {};
-    TH1D*   hLamBarM3Cos_ [NCentPbPb2018][NpT] = {};
+    vector<vector<TH1D*>>   hLambdaM2Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaM2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarM2Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarM2Cos2_ (NCent, vector<TH1D*>(NpT));
 
+    vector<vector<TH1D*>>   hLambdaP3Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarP3Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaM3Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarM3Cos_  (NCent, vector<TH1D*>(NpT));
+
+    // full eta
+    vector<vector<TH1D*>>   hLambdaF2MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF3MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF2PCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF3PCos_ (NCent, vector<TH1D*>(NpT));
+
+    vector<vector<TH1D*>>   hLamBarF2MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF3MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF2PCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF3PCos_ (NCent, vector<TH1D*>(NpT));
+
+    // v2
+    vector<vector<TH1D*>>   hLambdaPV2M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaMV2P_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaFV2M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaFV2P_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarPV2M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarMV2P_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarFV2M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarFV2P_ (NCent, vector<TH1D*>(NpT));
+
+    vector<vector<TH1D*>>   hLambdaPV3M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaMV3P_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaFV3M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaFV3P_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarPV3M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarMV3P_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarFV3M_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarFV3P_ (NCent, vector<TH1D*>(NpT));
     ////
     hCent_ = (TH1D*) f->Get(Form("output_%i_%i/hCent", s3, s3));
-    hCent2_ = (TH1D*) hCent_->Rebin(10, "hCent2");
+    hCent2_ = (TH1D*) hCent_->Rebin(NCent, "hCent2", CentBins);
 
-    hReHFp2HFm2_    = (TH1D*) f->Get(Form("output_%i_%i/hReHFp2HFm2_", s3, s3));
-    hReHFp2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFp2TrkMid2_", s3, s3));
-    hReHFm2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFm2TrkMid2_", s3, s3));
-    hImHFp2HFm2_    = (TH1D*) f->Get(Form("output_%i_%i/hImHFp2HFm2_", s3, s3));
-    hImHFp2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFp2TrkMid2_", s3, s3));
-    hImHFm2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFm2TrkMid2_", s3, s3));
+    hReHFp2HFm2_    = (TH1D*) f->Get(Form("output_%i_%i/hReHFp2HFm2", s3, s3));
+    hReHFp2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFp2TrkMid2", s3, s3));
+    hReHFm2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFm2TrkMid2", s3, s3));
+    hImHFp2HFm2_    = (TH1D*) f->Get(Form("output_%i_%i/hImHFp2HFm2", s3, s3));
+    hImHFp2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFp2TrkMid2", s3, s3));
+    hImHFm2TrkMid2_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFm2TrkMid2", s3, s3));
 
-    hReHFp3HFm3_    = (TH1D*) f->Get(Form("output_%i_%i/hReHFp3HFm3_", s3, s3));
-    hReHFp3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFp3TrkMid3_", s3, s3));
-    hReHFm3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFm3TrkMid3_", s3, s3));
-    hImHFp3HFm3_    = (TH1D*) f->Get(Form("output_%i_%i/hImHFp3HFm3_", s3, s3));
-    hImHFp3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFp3TrkMid3_", s3, s3));
-    hImHFm3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFm3TrkMid3_", s3, s3));
+    hReHFp3HFm3_    = (TH1D*) f->Get(Form("output_%i_%i/hReHFp3HFm3", s3, s3));
+    hReHFp3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFp3TrkMid3", s3, s3));
+    hReHFm3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hReHFm3TrkMid3", s3, s3));
+    hImHFp3HFm3_    = (TH1D*) f->Get(Form("output_%i_%i/hImHFp3HFm3", s3, s3));
+    hImHFp3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFp3TrkMid3", s3, s3));
+    hImHFm3TrkMid3_ = (TH1D*) f->Get(Form("output_%i_%i/hImHFm3TrkMid3", s3, s3));
 
-    for ( int cent = 0; cent < NCentPbPb2018; cent++ ) {
+    hHF2pRes_ = new TH1D("hHF2pRes_", "hHF2pRes_", NCent, CentBins);
+    hHF2mRes_ = new TH1D("hHF2mRes_", "hHF2mRes_", NCent, CentBins);
+    hHF3pRes_ = new TH1D("hHF3pRes_", "hHF3pRes_", NCent, CentBins);
+    hHF3mRes_ = new TH1D("hHF3mRes_", "hHF3mRes_", NCent, CentBins);
 
-    hHF2pO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2pO_%i", s3, s3, cent));
-    hHF2mO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2mO_%i", s3, s3, cent));
-    hHF2pF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2pF_%i", s3, s3, cent));
-    hHF2mF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2mF_%i", s3, s3, cent));
-    hHF3pO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3pO_%i", s3, s3, cent));
-    hHF3mO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3mO_%i", s3, s3, cent));
-    hHF3pF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3pF_%i", s3, s3, cent));
-    hHF3mF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3mF_%i", s3, s3, cent));
+    for ( int cent = bpPb?6:0; cent < NCent; cent++ ) {
+        hHF2pO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2pO_%i", s3, s3, cent));
+        hHF2mO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2mO_%i", s3, s3, cent));
+        hHF2pF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2pF_%i", s3, s3, cent));
+        hHF2mF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF2mF_%i", s3, s3, cent));
+        hHF3pO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3pO_%i", s3, s3, cent));
+        hHF3mO_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3mO_%i", s3, s3, cent));
+        hHF3pF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3pF_%i", s3, s3, cent));
+        hHF3mF_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hHF3mF_%i", s3, s3, cent));
 
-    hNLambda_  [cent] = (TH1D*) f->Get(Form("output_%i_%i/hNLambda_%i", s3, s3, cent));
-    hLambdaEta_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaEta_%i", s3, s3, cent));
+        hNLambda_  [cent] = (TH1D*) f->Get(Form("output_%i_%i/hNLambda_%i", s3, s3, cent));
+        hLambdaEta_[cent] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaEta_%i", s3, s3, cent));
 
         for ( int ipt = 0; ipt < NpT; ipt++ ) {
             hLambdaMass_[cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaMass_%i_%i", s3, s3, cent, ipt));
             hLamBarMass_[cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarMass_%i_%i", s3, s3, cent, ipt));
+            hLambdaMassP_[cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaMassP_%i_%i", s3, s3, cent, ipt));
+            hLamBarMassP_[cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarMassP_%i_%i", s3, s3, cent, ipt));
+            hLambdaMassM_[cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaMassM_%i_%i", s3, s3, cent, ipt));
+            hLamBarMassM_[cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarMassM_%i_%i", s3, s3, cent, ipt));
 
             hLambdaP2Cos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaP2Cos_%i_%i", s3, s3, cent, ipt));
             hLambdaP2Cos2_[cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaP2Cos2_%i_%i", s3, s3, cent, ipt));
@@ -108,8 +181,44 @@ void bGet(int s1 = 0, int s3 = 10)
             hLamBarP3Cos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarP3Cos_%i_%i", s3, s3, cent, ipt));
             hLambdaM3Cos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaM3Cos_%i_%i", s3, s3, cent, ipt));
             hLamBarM3Cos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarM3Cos_%i_%i", s3, s3, cent, ipt));
+
+            hLambdaF2MCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaF2MCos_%i_%i", s3, s3, cent, ipt));
+            hLambdaF2Cos2_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaF2Cos2_%i_%i", s3, s3, cent, ipt));
+            hLambdaF3MCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaF3MCos_%i_%i", s3, s3, cent, ipt));
+            hLambdaF2PCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaF2PCos_%i_%i", s3, s3, cent, ipt));
+            hLambdaF3PCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaF3PCos_%i_%i", s3, s3, cent, ipt));
+
+            hLamBarF2MCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarF2MCos_%i_%i", s3, s3, cent, ipt));
+            hLamBarF2Cos2_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarF2Cos2_%i_%i", s3, s3, cent, ipt));
+            hLamBarF3MCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarF3MCos_%i_%i", s3, s3, cent, ipt));
+            hLamBarF2PCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarF2PCos_%i_%i", s3, s3, cent, ipt));
+            hLamBarF3PCos_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarF3PCos_%i_%i", s3, s3, cent, ipt));
+
+            hLambdaPV2M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaPV2M_%i_%i", s3, s3, cent, ipt));
+            hLambdaMV2P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaMV2P_%i_%i", s3, s3, cent, ipt));
+            hLambdaFV2M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaFV2M_%i_%i", s3, s3, cent, ipt));
+            hLambdaFV2P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaFV2P_%i_%i", s3, s3, cent, ipt));
+            hLamBarPV2M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarPV2M_%i_%i", s3, s3, cent, ipt));
+            hLamBarMV2P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarMV2P_%i_%i", s3, s3, cent, ipt));
+            hLamBarFV2M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarFV2M_%i_%i", s3, s3, cent, ipt));
+            hLamBarFV2P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarFV2P_%i_%i", s3, s3, cent, ipt));
+
+            hLambdaPV3M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaPV3M_%i_%i", s3, s3, cent, ipt));
+            hLambdaMV3P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaMV3P_%i_%i", s3, s3, cent, ipt));
+            hLambdaFV3M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaFV3M_%i_%i", s3, s3, cent, ipt));
+            hLambdaFV3P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLambdaFV3P_%i_%i", s3, s3, cent, ipt));
+            hLamBarPV3M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarPV3M_%i_%i", s3, s3, cent, ipt));
+            hLamBarMV3P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarMV3P_%i_%i", s3, s3, cent, ipt));
+            hLamBarFV3M_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarFV3M_%i_%i", s3, s3, cent, ipt));
+            hLamBarFV3P_ [cent][ipt] = (TH1D*) f->Get(Form("output_%i_%i/hLamBarFV3P_%i_%i", s3, s3, cent, ipt));
+
+            if (bDebug) {
+                cout << " --> cent = " << cent << " ipt = " << ipt << endl;
+                cout << " --> hLambdaPV3M_ [cent][ipt] = " << hLambdaPV3M_ [cent][ipt]  << endl;
+            }
         }
     }
+
     ////
     //
     // EP
@@ -128,16 +237,149 @@ void bGet(int s1 = 0, int s3 = 10)
     hImHFm3TrkMid3_->Divide(hCent2_);
 
     // Cos2
-    for ( int cent = 0; cent < NCentPbPb2018; cent++ ) {
+    vector<vector<TH1D*>>   hLambdaCos2_(NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarCos2_(NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambda2Cos_(NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBar2Cos_(NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambda3Cos_(NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBar3Cos_(NCent, vector<TH1D*>(NpT));
+
+    for ( int cent = bpPb?6:0; cent < NCent; cent++ ) {
         for ( int ipt = 0; ipt < NpT; ipt++ ) {
-            hLambdaP2Cos2_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
-            hLamBarP2Cos2_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
-            hLambdaM2Cos2_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
-            hLamBarM2Cos2_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            // cos^2
+            hLambdaCos2_[cent][ipt] = (TH1D*) hLambdaP2Cos2_[cent][ipt]->Clone(Form("hLambdaCos2_%i_%i", cent, ipt));
+            hLamBarCos2_[cent][ipt] = (TH1D*) hLamBarP2Cos2_[cent][ipt]->Clone(Form("hLamBarCos2_%i_%i", cent, ipt));
+            hLambdaCos2_[cent][ipt]->Add(hLambdaM2Cos2_[cent][ipt]);
+            hLamBarCos2_[cent][ipt]->Add(hLamBarM2Cos2_[cent][ipt]);
+            hLambdaCos2_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLamBarCos2_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLambdaP2Cos2_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
+            hLambdaM2Cos2_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
+            hLamBarP2Cos2_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
+            hLamBarM2Cos2_[cent][ipt]->Divide(hLamBarMassM_[cent][ipt]);
+
+            // 2nd EP
+            hLambda2Cos_ [cent][ipt] = (TH1D*) hLambdaP2Cos_[cent][ipt]->Clone(Form("hLambda2Cos_%i_%i", cent, ipt));
+            hLamBar2Cos_ [cent][ipt] = (TH1D*) hLamBarP2Cos_[cent][ipt]->Clone(Form("hLamBar2Cos_%i_%i", cent, ipt));
+            hLambda2Cos_[cent][ipt]->Add(hLambdaM2Cos_[cent][ipt]);
+            hLamBar2Cos_[cent][ipt]->Add(hLamBarM2Cos_[cent][ipt]);
+            hLambda2Cos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLamBar2Cos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLambdaP2Cos_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
+            hLambdaM2Cos_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
+            hLamBarP2Cos_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
+            hLamBarM2Cos_[cent][ipt]->Divide(hLamBarMassM_[cent][ipt]);
+
+            // 3rd EP
+            hLambda3Cos_ [cent][ipt] = (TH1D*) hLambdaP3Cos_[cent][ipt]->Clone(Form("hLambda3Cos_%i_%i", cent, ipt));
+            hLamBar3Cos_ [cent][ipt] = (TH1D*) hLamBarP3Cos_[cent][ipt]->Clone(Form("hLamBar3Cos_%i_%i", cent, ipt));
+            hLambda3Cos_[cent][ipt]->Add(hLambdaM3Cos_[cent][ipt]);
+            hLamBar3Cos_[cent][ipt]->Add(hLamBarM3Cos_[cent][ipt]);
+            hLambda3Cos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLamBar3Cos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLambdaP3Cos_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
+            hLambdaM3Cos_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
+            hLamBarP3Cos_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
+            hLamBarM3Cos_[cent][ipt]->Divide(hLamBarMassM_[cent][ipt]);
+
+            // full eta
+            hLambdaF2MCos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLambdaF2Cos2_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLambdaF3MCos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLambdaF2PCos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLambdaF3PCos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+
+            hLamBarF2MCos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLamBarF2Cos2_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLamBarF3MCos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLamBarF2PCos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLamBarF3PCos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+
+            // v2
+            hLambdaPV2M_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
+            hLambdaMV2P_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
+            hLamBarPV2M_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
+            hLamBarMV2P_[cent][ipt]->Divide(hLamBarMassM_[cent][ipt]);
+
+            hLambdaPV3M_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
+            hLambdaMV3P_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
+            hLamBarPV3M_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
+            hLamBarMV3P_[cent][ipt]->Divide(hLamBarMassM_[cent][ipt]);
+
+            hLambdaFV2M_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLambdaFV2P_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLamBarFV2M_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLamBarFV2P_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+
+            hLambdaFV3M_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLambdaFV3P_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
+            hLamBarFV3M_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+            hLamBarFV3P_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
         }
     }
 
+    for ( int c = 1; c <= NCent; c++ ) {
+        double rHFp2HFm2 = hReHFp2HFm2_->GetBinContent(c);
+        double iHFp2HFm2 = hImHFp2HFm2_->GetBinContent(c);
+        double rHFp2Trk2 = hReHFp2TrkMid2_->GetBinContent(c);
+        double iHFp2Trk2 = hImHFp2TrkMid2_->GetBinContent(c);
+        double rHFm2Trk2 = hReHFm2TrkMid2_->GetBinContent(c);
+        double iHFm2Trk2 = hImHFm2TrkMid2_->GetBinContent(c);
 
+        std::complex cHFp2HFm2(rHFp2HFm2, iHFp2HFm2);
+        std::complex cHFp2Trk2(rHFp2Trk2, iHFp2Trk2);
+        std::complex cHFm2Trk2(rHFm2Trk2, iHFm2Trk2);
+
+        double rHFp3HFm3 = hReHFp3HFm3_->GetBinContent(c);
+        double iHFp3HFm3 = hImHFp3HFm3_->GetBinContent(c);
+        double rHFp3Trk3 = hReHFp3TrkMid3_->GetBinContent(c);
+        double iHFp3Trk3 = hImHFp3TrkMid3_->GetBinContent(c);
+        double rHFm3Trk3 = hReHFm3TrkMid3_->GetBinContent(c);
+        double iHFm3Trk3 = hImHFm3TrkMid3_->GetBinContent(c);
+
+        std::complex cHFp3HFm3(rHFp3HFm3, iHFp3HFm3);
+        std::complex cHFp3Trk3(rHFp3Trk3, iHFp3Trk3);
+        std::complex cHFm3Trk3(rHFm3Trk3, iHFm3Trk3);
+
+        std::complex resHFp2 = cHFp2HFm2 * cHFp2Trk2 / cHFm2Trk2;
+        std::complex resHFm2 = std::conj(cHFp2HFm2) * cHFm2Trk2 / cHFp2Trk2;
+        std::complex resHFp3 = cHFp3HFm3 * cHFp3Trk3 / cHFm3Trk3;
+        std::complex resHFm3 = std::conj(cHFp3HFm3) * cHFm3Trk3 / cHFp3Trk3;
+
+        if ( resHFp2.real() < 0 ) cout << "  --> resHFp2.real() = " << resHFp2.real() << endl;
+        if ( resHFm2.real() < 0 ) cout << "  --> resHFm2.real() = " << resHFm2.real() << endl;
+        if ( resHFp3.real() < 0 ) cout << "  --> resHFp3.real() = " << resHFp3.real() << endl;
+        if ( resHFm3.real() < 0 ) cout << "  --> resHFm3.real() = " << resHFm3.real() << endl;
+
+        hHF2pRes_->SetBinContent( c, resHFp2.real() );
+        hHF2mRes_->SetBinContent( c, resHFm2.real() );
+        hHF3pRes_->SetBinContent( c, resHFp3.real() );
+        hHF3mRes_->SetBinContent( c, resHFm3.real() );
+    }
+
+    for ( int cent = bpPb?6:0; cent < NCent; cent++ ) {
+        for ( int ipt = 0; ipt < NpT; ipt++ ) {
+            hLambdaPV2M_[cent][ipt]->Scale(1./hHF2mRes_->GetBinContent(cent+1));
+            hLambdaMV2P_[cent][ipt]->Scale(1./hHF2pRes_->GetBinContent(cent+1));
+            hLamBarPV2M_[cent][ipt]->Scale(1./hHF2mRes_->GetBinContent(cent+1));
+            hLamBarMV2P_[cent][ipt]->Scale(1./hHF2pRes_->GetBinContent(cent+1));
+
+            hLambdaPV3M_[cent][ipt]->Scale(1./hHF3mRes_->GetBinContent(cent+1));
+            hLambdaMV3P_[cent][ipt]->Scale(1./hHF3pRes_->GetBinContent(cent+1));
+            hLamBarPV3M_[cent][ipt]->Scale(1./hHF3mRes_->GetBinContent(cent+1));
+            hLamBarMV3P_[cent][ipt]->Scale(1./hHF3pRes_->GetBinContent(cent+1));
+
+            hLambdaFV2M_[cent][ipt]->Scale(1./hHF2mRes_->GetBinContent(cent+1));
+            hLambdaFV2P_[cent][ipt]->Scale(1./hHF2pRes_->GetBinContent(cent+1));
+            hLamBarFV2M_[cent][ipt]->Scale(1./hHF2mRes_->GetBinContent(cent+1));
+            hLamBarFV2P_[cent][ipt]->Scale(1./hHF2pRes_->GetBinContent(cent+1));
+
+            hLambdaFV3M_[cent][ipt]->Scale(1./hHF3mRes_->GetBinContent(cent+1));
+            hLambdaFV3P_[cent][ipt]->Scale(1./hHF3pRes_->GetBinContent(cent+1));
+            hLamBarFV3M_[cent][ipt]->Scale(1./hHF3mRes_->GetBinContent(cent+1));
+            hLamBarFV3P_[cent][ipt]->Scale(1./hHF3pRes_->GetBinContent(cent+1));
+        }
+    }
     // Save
     TFile * fsave = new TFile(Form("%s/bGet_%i.root", ftxt[s1], s3), "recreate");
     hCent_         ->Write("hCent");
@@ -156,12 +398,81 @@ void bGet(int s1 = 0, int s3 = 10)
     hImHFp3TrkMid3_->Write("hImHFp3TrkMid3");
     hImHFm3TrkMid3_->Write("hImHFm3TrkMid3");
 
-    for ( int cent = 0; cent < NCentPbPb2018; cent++ ) {
+    hHF2pRes_->Write("hHF2pRes");
+    hHF2mRes_->Write("hHF2mRes");
+    hHF3pRes_->Write("hHF3pRes");
+    hHF3mRes_->Write("hHF3mRes");
+
+    for ( int cent = bpPb?6:0; cent < NCent; cent++ ) {
+        hHF2pO_    [cent]->Write(Form("hHF2pO_%i", cent));
+        hHF2mO_    [cent]->Write(Form("hHF2mO_%i", cent));
+        hHF2pF_    [cent]->Write(Form("hHF2pF_%i", cent));
+        hHF2mF_    [cent]->Write(Form("hHF2mF_%i", cent));
+        hHF3pO_    [cent]->Write(Form("hHF3pO_%i", cent));
+        hHF3mO_    [cent]->Write(Form("hHF3mO_%i", cent));
+        hHF3pF_    [cent]->Write(Form("hHF3pF_%i", cent));
+        hHF3mF_    [cent]->Write(Form("hHF3mF_%i", cent));
+        hNLambda_  [cent]->Write(Form("hNLambda_%i", cent));
+        hLambdaEta_[cent]->Write(Form("hLambdaEta_%i", cent));
+
         for ( int ipt = 0; ipt < NpT; ipt++ ) {
+            hLambdaMass_[cent][ipt]->Write(Form("hLambdaMass_%i_%i", cent, ipt));
+            hLamBarMass_[cent][ipt]->Write(Form("hLamBarMass_%i_%i", cent, ipt));
+
+            hLambdaP2Cos_ [cent][ipt]->Write(Form("hLambdaP2Cos_%i_%i",  cent, ipt));
             hLambdaP2Cos2_[cent][ipt]->Write(Form("hLambdaP2Cos2_%i_%i", cent, ipt));
+            hLamBarP2Cos_ [cent][ipt]->Write(Form("hLamBarP2Cos_%i_%i",  cent, ipt));
             hLamBarP2Cos2_[cent][ipt]->Write(Form("hLamBarP2Cos2_%i_%i", cent, ipt));
+
+            hLambdaM2Cos_ [cent][ipt]->Write(Form("hLambdaM2Cos_%i_%i",  cent, ipt));
             hLambdaM2Cos2_[cent][ipt]->Write(Form("hLambdaM2Cos2_%i_%i", cent, ipt));
+            hLamBarM2Cos_ [cent][ipt]->Write(Form("hLamBarM2Cos_%i_%i",  cent, ipt));
             hLamBarM2Cos2_[cent][ipt]->Write(Form("hLamBarM2Cos2_%i_%i", cent, ipt));
+
+            hLambdaP3Cos_ [cent][ipt]->Write(Form("hLambdaP3Cos_%i_%i", cent, ipt));
+            hLamBarP3Cos_ [cent][ipt]->Write(Form("hLamBarP3Cos_%i_%i", cent, ipt));
+            hLambdaM3Cos_ [cent][ipt]->Write(Form("hLambdaM3Cos_%i_%i", cent, ipt));
+            hLamBarM3Cos_ [cent][ipt]->Write(Form("hLamBarM3Cos_%i_%i", cent, ipt));
+
+            hLambdaF2MCos_[cent][ipt]->Write(Form("hLambdaF2MCos_%i_%i", cent, ipt));
+            hLambdaF2Cos2_[cent][ipt]->Write(Form("hLambdaF2Cos2_%i_%i", cent, ipt));
+            hLambdaF3MCos_[cent][ipt]->Write(Form("hLambdaF3MCos_%i_%i", cent, ipt));
+            hLambdaF2PCos_[cent][ipt]->Write(Form("hLambdaF2PCos_%i_%i", cent, ipt));
+            hLambdaF3PCos_[cent][ipt]->Write(Form("hLambdaF3PCos_%i_%i", cent, ipt));
+
+            hLamBarF2MCos_[cent][ipt]->Write(Form("hLamBarF2MCos_%i_%i", cent, ipt));
+            hLamBarF2Cos2_[cent][ipt]->Write(Form("hLamBarF2Cos2_%i_%i", cent, ipt));
+            hLamBarF3MCos_[cent][ipt]->Write(Form("hLamBarF3MCos_%i_%i", cent, ipt));
+            hLamBarF2PCos_[cent][ipt]->Write(Form("hLamBarF2PCos_%i_%i", cent, ipt));
+            hLamBarF3PCos_[cent][ipt]->Write(Form("hLamBarF3PCos_%i_%i", cent, ipt));
+
+            hLambdaCos2_[cent][ipt]->Write(Form("hLambdaCos2_%i_%i", cent, ipt));
+            hLamBarCos2_[cent][ipt]->Write(Form("hLamBarCos2_%i_%i", cent, ipt));
+            hLambda2Cos_[cent][ipt]->Write(Form("hLambda2Cos_%i_%i", cent, ipt));
+            hLamBar2Cos_[cent][ipt]->Write(Form("hLamBar2Cos_%i_%i", cent, ipt));
+            hLambda3Cos_[cent][ipt]->Write(Form("hLambda3Cos_%i_%i", cent, ipt));
+            hLamBar3Cos_[cent][ipt]->Write(Form("hLamBar3Cos_%i_%i", cent, ipt));
+
+            // v2
+            hLambdaPV2M_[cent][ipt]->Write(Form("hLambdaPV2M_%i_%i", cent, ipt));
+            hLambdaMV2P_[cent][ipt]->Write(Form("hLambdaMV2P_%i_%i", cent, ipt));
+            hLamBarPV2M_[cent][ipt]->Write(Form("hLamBarPV2M_%i_%i", cent, ipt));
+            hLamBarMV2P_[cent][ipt]->Write(Form("hLamBarMV2P_%i_%i", cent, ipt));
+
+            hLambdaPV3M_[cent][ipt]->Write(Form("hLambdaPV3M_%i_%i", cent, ipt));
+            hLambdaMV3P_[cent][ipt]->Write(Form("hLambdaMV3P_%i_%i", cent, ipt));
+            hLamBarPV3M_[cent][ipt]->Write(Form("hLamBarPV3M_%i_%i", cent, ipt));
+            hLamBarMV3P_[cent][ipt]->Write(Form("hLamBarMV3P_%i_%i", cent, ipt));
+
+            hLambdaFV2M_[cent][ipt]->Write(Form("hLambdaFV2M_%i_%i", cent, ipt));
+            hLambdaFV2P_[cent][ipt]->Write(Form("hLambdaFV2P_%i_%i", cent, ipt));
+            hLamBarFV2M_[cent][ipt]->Write(Form("hLamBarFV2M_%i_%i", cent, ipt));
+            hLamBarFV2P_[cent][ipt]->Write(Form("hLamBarFV2P_%i_%i", cent, ipt));
+
+            hLambdaFV3M_[cent][ipt]->Write(Form("hLambdaFV3M_%i_%i", cent, ipt));
+            hLambdaFV3P_[cent][ipt]->Write(Form("hLambdaFV3P_%i_%i", cent, ipt));
+            hLamBarFV3M_[cent][ipt]->Write(Form("hLamBarFV3M_%i_%i", cent, ipt));
+            hLamBarFV3P_[cent][ipt]->Write(Form("hLamBarFV3P_%i_%i", cent, ipt));
         }
     }
 }
