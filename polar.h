@@ -70,6 +70,10 @@ struct PolarData {
     hLambdaEta_(NCent),
     hLambdaMass_  (NCent, vector<TH1D*>(NpT)),
     hLamBarMass_  (NCent, vector<TH1D*>(NpT)),
+    hLambdaMassP_ (NCent, vector<TH1D*>(NpT)),
+    hLamBarMassP_ (NCent, vector<TH1D*>(NpT)),
+    hLambdaMassM_ (NCent, vector<TH1D*>(NpT)),
+    hLamBarMassM_ (NCent, vector<TH1D*>(NpT)),
     hLambdaP2Cos_ (NCent, vector<TH1D*>(NpT)),
     hLambdaP2Cos2_(NCent, vector<TH1D*>(NpT)),
     hLamBarP2Cos_ (NCent, vector<TH1D*>(NpT)),
@@ -148,6 +152,10 @@ struct PolarData {
             for ( int ipt = 0; ipt < NpT; ipt++ ) {
                 hLambdaMass_[cent][ipt] = new TH1D((name_+Form("hLambdaMass_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
                 hLamBarMass_[cent][ipt] = new TH1D((name_+Form("hLamBarMass_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaMassP_[cent][ipt] = new TH1D((name_+Form("hLambdaMassP_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarMassP_[cent][ipt] = new TH1D((name_+Form("hLamBarMassP_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLambdaMassM_[cent][ipt] = new TH1D((name_+Form("hLambdaMassM_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
+                hLamBarMassM_[cent][ipt] = new TH1D((name_+Form("hLamBarMassM_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
 
                 hLambdaP2Cos_ [cent][ipt] = new TH1D((name_+Form("hLambdaP2Cos_%i_%i",  cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
                 hLambdaP2Cos2_[cent][ipt] = new TH1D((name_+Form("hLambdaP2Cos2_%i_%i", cent, ipt)).c_str(), Form("CentBin %i-%i, pT %.1f-%.1f", int(CentBins[cent]), int(CentBins[cent+1]), pTbin[ipt], pTbin[ipt+1]), N_LmBins, Lm_mass_min, Lm_mass_max);
@@ -281,6 +289,7 @@ struct PolarData {
                 hLambdaMass_[cent][ipt]->Fill( (*evt.mass)[i] );
                 if ( (*evt.eta)[i] > 0 ) {
                     // P-side
+                    hLambdaMassP_[cent][ipt]->Fill( (*evt.mass)[i] );
                     hLambdaP2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );
                     hLambdaP2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLambdaP3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_m3 ) );
@@ -288,6 +297,7 @@ struct PolarData {
                     hLambdaPV3M_  [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFm3)).real() );
                 } else {
                     // M-side
+                    hLambdaMassM_[cent][ipt]->Fill( (*evt.mass)[i] );
                     hLambdaM2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_p2 ) );
                     hLambdaM2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLambdaM3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_p3 ) );
@@ -310,6 +320,7 @@ struct PolarData {
                 hLamBarMass_[cent][ipt]->Fill( (*evt.mass)[i] );
                 if ( (*evt.eta)[i] > 0 ) {
                     // P-side
+                    hLamBarMassP_[cent][ipt]->Fill( (*evt.mass)[i] );
                     hLamBarP2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );
                     hLamBarP2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLamBarP3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_m3 ) );
@@ -317,6 +328,7 @@ struct PolarData {
                     hLamBarPV3M_  [cent][ipt]->Fill( (*evt.mass)[i], (Q3*std::conj(rpHFm3)).real() );
                 } else {
                     // M-side
+                    hLamBarMassM_[cent][ipt]->Fill( (*evt.mass)[i] );
                     hLamBarM2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_p2 ) );
                     hLamBarM2Cos2_[cent][ipt]->Fill( (*evt.mass)[i], cosTheta*cosTheta );
                     hLamBarM3Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 3*Dphi_p3 ) );
@@ -371,6 +383,10 @@ struct PolarData {
             for ( int ipt = 0; ipt < NpT; ipt++ ) {
                 hLambdaMass_  [cent][ipt]->Write(Form("hLambdaMass_%i_%i", cent, ipt));
                 hLamBarMass_  [cent][ipt]->Write(Form("hLamBarMass_%i_%i", cent, ipt));
+                hLambdaMassP_ [cent][ipt]->Write(Form("hLambdaMassP_%i_%i", cent, ipt));
+                hLamBarMassP_ [cent][ipt]->Write(Form("hLamBarMassP_%i_%i", cent, ipt));
+                hLambdaMassM_ [cent][ipt]->Write(Form("hLambdaMassM_%i_%i", cent, ipt));
+                hLamBarMassM_ [cent][ipt]->Write(Form("hLamBarMassM_%i_%i", cent, ipt));
 
                 hLambdaP2Cos_ [cent][ipt]->Write(Form("hLambdaP2Cos_%i_%i", cent, ipt));
                 hLambdaP2Cos2_[cent][ipt]->Write(Form("hLambdaP2Cos2_%i_%i", cent, ipt));
@@ -443,6 +459,10 @@ struct PolarData {
     // Lm mass binning
     vector<vector<TH1D*>>   hLambdaMass_  ;
     vector<vector<TH1D*>>   hLamBarMass_  ;
+    vector<vector<TH1D*>>   hLambdaMassP_ ;
+    vector<vector<TH1D*>>   hLamBarMassP_ ;
+    vector<vector<TH1D*>>   hLambdaMassM_ ;
+    vector<vector<TH1D*>>   hLamBarMassM_ ;
 
     vector<vector<TH1D*>>   hLambdaP2Cos_ ;
     vector<vector<TH1D*>>   hLambdaP2Cos2_;

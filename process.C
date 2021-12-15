@@ -71,7 +71,7 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
     chV->SetBranchAddress("Lumi",       &evt.Lumi);
 
     PolarData* data[s3+1];
-    for ( int i = 0; i <= s3; i++ ) {
+    for ( int i = s3; i <= s3; i++ ) {
         data[i] = new PolarData(string("pd")+to_string(i));
     }
 
@@ -82,7 +82,7 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
         if ( !(ievt%1000000) ) cout << "!! ievt = " << ievt << endl;
 
         int s2 = ievt%s3;
-        data[s2]->Fill(evt);
+        //data[s2]->Fill(evt);
         int ret = data[s3]->Fill(evt);
         if ( ret == 1 ) {
             std::cout << " ---> Failed event in " << chV->GetFile()->GetName() << " RunId = " << evt.RunId << " Lumi = " << evt.Lumi << " EventId = " << evt.EventId << std::endl;
