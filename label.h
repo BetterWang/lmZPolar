@@ -2,11 +2,11 @@
 char const * fname[] = {
     "test",         // 0 test
     "",             // 1 HIMB0
-    "",             // 2 HIMB1
-    "",             // 3 HIMB2
-    "",             // 4 HIMB3
+    "../PbPb2018/HIMinimumBias1/crab_HIMB1_LmPolarTree_v2/220115_050941/0000/",             // 2 HIMB1
+    "../PbPb2018/HIMinimumBias2/crab_HIMB2_LmPolarTree_v2/220115_050538/0000/",             // 3 HIMB2
+    "../PbPb2018/HIMinimumBias3/crab_HIMB3_LmPolarTree_v2/211230_054108/0000/",             // 4 HIMB3
     "../PbPb2018/HIMinimumBias4/crab_HIMB4_LmPolarTree_v2/211007_091317/0000/",             // 5 HIMB4
-    "",             // 6 HIMB5
+    "../PbPb2018/HIMinimumBias5/crab_HIMB5_LmPolarTree_v2/220115_051220/0000/",             // 6 HIMB5
     "",             // 7 HIMB6
     "",             // 8 HIMB7
     "",             // 9 HIMB8
