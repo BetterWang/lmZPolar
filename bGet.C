@@ -40,6 +40,9 @@ void bGet(int s1 = 0, int s3 = 10)
     TH1D*   hCent_ = nullptr;
     TH1D*   hCent2_ = nullptr;
 
+    // EP
+    // O - Original
+    // F - Flatten
     vector<TH1D*>   hHF2pO_    (NCent);
     vector<TH1D*>   hHF2mO_    (NCent);
     vector<TH1D*>   hHF2pF_    (NCent);
@@ -48,9 +51,13 @@ void bGet(int s1 = 0, int s3 = 10)
     vector<TH1D*>   hHF3mO_    (NCent);
     vector<TH1D*>   hHF3pF_    (NCent);
     vector<TH1D*>   hHF3mF_    (NCent);
+
     vector<TH1D*>   hNLambda_  (NCent);
     vector<TH1D*>   hLambdaEta_(NCent);
 
+    // EP Resolution Parts
+    // Re - real
+    // Im - imag
     TH1D*   hReHFp2HFm2_    = 0;
     TH1D*   hReHFp2TrkMid2_ = 0;
     TH1D*   hReHFm2TrkMid2_ = 0;
@@ -65,6 +72,14 @@ void bGet(int s1 = 0, int s3 = 10)
     TH1D*   hImHFp3TrkMid3_ = 0;
     TH1D*   hImHFm3TrkMid3_ = 0;
 
+    TH1D*   hHF2pRes_ = 0;
+    TH1D*   hHF2mRes_ = 0;
+    TH1D*   hHF3pRes_ = 0;
+    TH1D*   hHF3mRes_ = 0;
+
+    // SP Resolution Parts
+    // Re - real
+    // Im - imag
     TH1D*   hReHFp2HFm2SP_    = 0;
     TH1D*   hReHFp2TrkMid2SP_ = 0;
     TH1D*   hReHFm2TrkMid2SP_ = 0;
@@ -79,17 +94,13 @@ void bGet(int s1 = 0, int s3 = 10)
     TH1D*   hImHFp3TrkMid3SP_ = 0;
     TH1D*   hImHFm3TrkMid3SP_ = 0;
 
-    TH1D*   hHF2pRes_ = 0;
-    TH1D*   hHF2mRes_ = 0;
-    TH1D*   hHF3pRes_ = 0;
-    TH1D*   hHF3mRes_ = 0;
-
     TH1D*   hHF2pResSP_ = 0;
     TH1D*   hHF2mResSP_ = 0;
     TH1D*   hHF3pResSP_ = 0;
     TH1D*   hHF3mResSP_ = 0;
 
     // Lm mass binning
+    // [cent][ipt]
     vector<vector<TH1D*>>   hLambdaMass_   (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBarMass_   (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLambdaMassP_  (NCent, vector<TH1D*>(NpT));
@@ -97,21 +108,37 @@ void bGet(int s1 = 0, int s3 = 10)
     vector<vector<TH1D*>>   hLambdaMassM_  (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBarMassM_  (NCent, vector<TH1D*>(NpT));
 
+    // Polar P(M)-side wrt HFm(HFp)
     vector<vector<TH1D*>>   hLambdaP2Cos_  (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLambdaP2Cos2_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarP2Cos_  (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarP2Cos2_ (NCent, vector<TH1D*>(NpT));
-
     vector<vector<TH1D*>>   hLambdaM2Cos_  (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLambdaM2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarP2Cos_  (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBarM2Cos_  (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarM2Cos2_ (NCent, vector<TH1D*>(NpT));
 
     vector<vector<TH1D*>>   hLambdaP3Cos_  (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarP3Cos_  (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLambdaM3Cos_  (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarP3Cos_  (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBarM3Cos_  (NCent, vector<TH1D*>(NpT));
 
+    // full eta
+    vector<vector<TH1D*>>   hLambdaF2MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF3MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF2PCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaF3PCos_ (NCent, vector<TH1D*>(NpT));
+
+    vector<vector<TH1D*>>   hLamBarF2MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF3MCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF2PCos_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarF3PCos_ (NCent, vector<TH1D*>(NpT));
+
+    // Polar cosTheta^2 -- acceptance term
+    vector<vector<TH1D*>>   hLambdaP2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLambdaM2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarP2Cos2_ (NCent, vector<TH1D*>(NpT));
+    vector<vector<TH1D*>>   hLamBarM2Cos2_ (NCent, vector<TH1D*>(NpT));
+
+    // Polar SP
     vector<vector<TH1D*>>   hLambdaP2CosSP_ (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLambdaP3CosSP_ (NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLambdaM2CosSP_ (NCent, vector<TH1D*>(NpT));
@@ -129,19 +156,6 @@ void bGet(int s1 = 0, int s3 = 10)
     vector<vector<TH1D*>>   hLamBarF3MCosSP_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBarF2PCosSP_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBarF3PCosSP_(NCent, vector<TH1D*>(NpT));
-
-    // full eta
-    vector<vector<TH1D*>>   hLambdaF2MCos_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLambdaF2Cos2_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLambdaF3MCos_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLambdaF2PCos_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLambdaF3PCos_ (NCent, vector<TH1D*>(NpT));
-
-    vector<vector<TH1D*>>   hLamBarF2MCos_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarF2Cos2_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarF3MCos_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarF2PCos_ (NCent, vector<TH1D*>(NpT));
-    vector<vector<TH1D*>>   hLamBarF3PCos_ (NCent, vector<TH1D*>(NpT));
 
     // v2
     vector<vector<TH1D*>>   hLambdaPV2M_ (NCent, vector<TH1D*>(NpT));
@@ -294,8 +308,7 @@ void bGet(int s1 = 0, int s3 = 10)
     }
 
     ////
-    //
-    // EP
+    // EP Res
     hReHFp2HFm2_   ->Divide(hCent2_);
     hReHFp2TrkMid2_->Divide(hCent2_);
     hReHFm2TrkMid2_->Divide(hCent2_);
@@ -310,6 +323,7 @@ void bGet(int s1 = 0, int s3 = 10)
     hImHFp3TrkMid3_->Divide(hCent2_);
     hImHFm3TrkMid3_->Divide(hCent2_);
 
+    // SP Res
     hReHFp2HFm2SP_   ->Divide(hCent2_);
     hReHFp2TrkMid2SP_->Divide(hCent2_);
     hReHFm2TrkMid2SP_->Divide(hCent2_);
@@ -324,14 +338,17 @@ void bGet(int s1 = 0, int s3 = 10)
     hImHFp3TrkMid3SP_->Divide(hCent2_);
     hImHFm3TrkMid3SP_->Divide(hCent2_);
 
-    // Cos2
+    // cosTheta^2 combine P+M
     vector<vector<TH1D*>>   hLambdaCos2_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBarCos2_(NCent, vector<TH1D*>(NpT));
+
+    // Polar combine P+M
     vector<vector<TH1D*>>   hLambda2Cos_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBar2Cos_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLambda3Cos_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBar3Cos_(NCent, vector<TH1D*>(NpT));
 
+    // Polar SP combine P+M
     vector<vector<TH1D*>>   hLambda2CosSP_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLamBar2CosSP_(NCent, vector<TH1D*>(NpT));
     vector<vector<TH1D*>>   hLambda3CosSP_(NCent, vector<TH1D*>(NpT));
@@ -346,6 +363,7 @@ void bGet(int s1 = 0, int s3 = 10)
             hLamBarCos2_[cent][ipt]->Add(hLamBarM2Cos2_[cent][ipt]);
             hLambdaCos2_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
             hLamBarCos2_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+
             hLambdaP2Cos2_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
             hLambdaM2Cos2_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
             hLamBarP2Cos2_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
@@ -358,17 +376,20 @@ void bGet(int s1 = 0, int s3 = 10)
             hLamBar2Cos_[cent][ipt]->Add(hLamBarM2Cos_[cent][ipt]);
             hLambda2Cos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
             hLamBar2Cos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+
             hLambdaP2Cos_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
             hLambdaM2Cos_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
             hLamBarP2Cos_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
             hLamBarM2Cos_[cent][ipt]->Divide(hLamBarMassM_[cent][ipt]);
 
+            // 2nd SP
             hLambda2CosSP_ [cent][ipt] = (TH1D*) hLambdaP2CosSP_[cent][ipt]->Clone(Form("hLambda2CosSP_%i_%i", cent, ipt));
             hLamBar2CosSP_ [cent][ipt] = (TH1D*) hLamBarP2CosSP_[cent][ipt]->Clone(Form("hLamBar2CosSP_%i_%i", cent, ipt));
             hLambda2CosSP_[cent][ipt]->Add(hLambdaM2CosSP_[cent][ipt]);
             hLamBar2CosSP_[cent][ipt]->Add(hLamBarM2CosSP_[cent][ipt]);
             hLambda2CosSP_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
             hLamBar2CosSP_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+
             hLambdaP2CosSP_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
             hLambdaM2CosSP_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
             hLamBarP2CosSP_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
@@ -381,17 +402,20 @@ void bGet(int s1 = 0, int s3 = 10)
             hLamBar3Cos_[cent][ipt]->Add(hLamBarM3Cos_[cent][ipt]);
             hLambda3Cos_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
             hLamBar3Cos_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+
             hLambdaP3Cos_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
             hLambdaM3Cos_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
             hLamBarP3Cos_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
             hLamBarM3Cos_[cent][ipt]->Divide(hLamBarMassM_[cent][ipt]);
 
+            // 3rd SP
             hLambda3CosSP_ [cent][ipt] = (TH1D*) hLambdaP3CosSP_[cent][ipt]->Clone(Form("hLambda3CosSP_%i_%i", cent, ipt));
             hLamBar3CosSP_ [cent][ipt] = (TH1D*) hLamBarP3CosSP_[cent][ipt]->Clone(Form("hLamBar3CosSP_%i_%i", cent, ipt));
             hLambda3CosSP_[cent][ipt]->Add(hLambdaM3CosSP_[cent][ipt]);
             hLamBar3CosSP_[cent][ipt]->Add(hLamBarM3CosSP_[cent][ipt]);
             hLambda3CosSP_[cent][ipt]->Divide(hLambdaMass_[cent][ipt]);
             hLamBar3CosSP_[cent][ipt]->Divide(hLamBarMass_[cent][ipt]);
+
             hLambdaP3CosSP_[cent][ipt]->Divide(hLambdaMassP_[cent][ipt]);
             hLambdaM3CosSP_[cent][ipt]->Divide(hLambdaMassM_[cent][ipt]);
             hLamBarP3CosSP_[cent][ipt]->Divide(hLamBarMassP_[cent][ipt]);
@@ -632,6 +656,7 @@ void bGet(int s1 = 0, int s3 = 10)
         hHF3mO_    [cent]->Write(Form("hHF3mO_%i", cent));
         hHF3pF_    [cent]->Write(Form("hHF3pF_%i", cent));
         hHF3mF_    [cent]->Write(Form("hHF3mF_%i", cent));
+
         hNLambda_  [cent]->Write(Form("hNLambda_%i", cent));
         hLambdaEta_[cent]->Write(Form("hLambdaEta_%i", cent));
 
