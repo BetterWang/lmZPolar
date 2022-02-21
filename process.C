@@ -9,7 +9,7 @@ using namespace std;
 extern int NCent;
 extern const double* CentBins;
 
-void process(int s1 = 0, int s3 = 10, int sVz = 0)
+void process(int s1 = 0, int s3 = 10, int sVz = 0, double mvaCut = 0.20)
 {
     cout << " s1 = " << s1 << " s3 = " << s3 << endl;
     TH1::SetDefaultSumw2();
@@ -64,6 +64,7 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
     chV->SetBranchAddress("eta",        &evt.eta);
     chV->SetBranchAddress("rapidity",   &evt.rapidity);
     chV->SetBranchAddress("mass",       &evt.mass);
+    if ( bPbPb ) chV->SetBranchAddress("mva",        &evt.mva);
     chV->SetBranchAddress("Cent",       &evt.Cent);
     chV->SetBranchAddress("vz",         &evt.vz);
     chV->SetBranchAddress("RunId",      &evt.RunId);
@@ -83,7 +84,7 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0)
 
         int s2 = ievt%s3;
         //data[s2]->Fill(evt);
-        int ret = data[s3]->Fill(evt);
+        int ret = data[s3]->Fill(evt, mvaCut);
         if ( ret == 1 ) {
             std::cout << " ---> Failed event in " << chV->GetFile()->GetName() << " RunId = " << evt.RunId << " Lumi = " << evt.Lumi << " EventId = " << evt.EventId << std::endl;
         }

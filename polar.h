@@ -49,6 +49,7 @@ struct PolarEvent {
     vector<double>  *eta        = 0;
     vector<double>  *rapidity   = 0;
     vector<double>  *mass       = 0;
+    vector<double>  *mva        = 0;
     Double_t        Cent        = 0;
     Double_t        vz          = 0;
     Double_t        RunId       = 0;
@@ -254,7 +255,7 @@ struct PolarData {
         }
     };
 
-    int Fill(const PolarEvent& evt) {
+    int Fill(const PolarEvent& evt, const double mvaCut) {
         hCent_->Fill(evt.Cent);
         if ( evt.Cent >= CentBins[NCent] ) return 2;
 
@@ -326,6 +327,7 @@ struct PolarData {
 
         int NLm = 0;
         for ( unsigned int i = 0; i < evt.pdgId->size(); i++ ) {
+            if ( bPbPb and ((*evt.mva)[i] < mvaCut) ) continue;
             if ( ((*evt.pt)[i] < pTbin[0]) or ((*evt.pt)[i] > pTbin[NpT]) ) continue;
             if ( bForward_ ) {
                 if ( ( abs((*evt.eta)[i]) < 1.0 ) or ( abs((*evt.eta)[i]) > 2.0 ) ) continue;

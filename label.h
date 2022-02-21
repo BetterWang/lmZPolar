@@ -7,12 +7,12 @@ char const * fname[] = {
     "../PbPb2018/HIMinimumBias3/crab_HIMB3_LmPolarTree_v2/211230_054108/0000/",             // 4 HIMB3
     "../PbPb2018/HIMinimumBias4/crab_HIMB4_LmPolarTree_v2/211007_091317/0000/",             // 5 HIMB4
     "../PbPb2018/HIMinimumBias5/crab_HIMB5_LmPolarTree_v2/220115_051220/0000/",             // 6 HIMB5
-    "",             // 7 HIMB6
-    "",             // 8 HIMB7
-    "",             // 9 HIMB8
-    "",             // 10 HIMB9
-    "",           // 11 HIMB10
-    "",             // 12 HIMB11
+    "../PbPb2018/HIMinimumBias6/crab_HIMB6_LmPolarTree_v2/220128_211954/0000/",             // 7 HIMB6
+    "../PbPb2018/HIMinimumBias7/crab_HIMB7_LmPolarTree_v2/220209_050811/0000/",             // 8 HIMB7
+    "../PbPb2018/HIMinimumBias8/crab_HIMB8_LmPolarTree_v2/220209_192412/0000/",             // 9 HIMB8
+    "",           // 10 HIMB9
+    "../PbPb2018/HIMinimumBias10/crab_HIMB10_LmPolarTree_v3/220211_174031/0000/",           // 11 HIMB10
+    "../PbPb2018/HIMinimumBias11/crab_HIMB11_LmPolarTree_v3/220218_202334/0000/",           // 12 HIMB11
     "",             // 13 HIMB12
     "",             // 14 HIMB13
     "",             // 15 HIMB14
