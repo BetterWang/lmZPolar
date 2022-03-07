@@ -21,7 +21,7 @@ char const * fname[] = {
     "",             // 18 HIMB17
     "",             // 19 HIMB18
     "",             // 20 HIMB19
-    "NA",           // 21 HIMB merge
+    "PbPb2018_NA",           // 21 HIMB merge
     "../PbPb2018/HIMinimumBias2/crab_HIMB2_V0Tree_WrongSign_v2/211011_074510/0000/",           // 22 HIMB2 WrongSign
     "",           // 23
     "",           // 24

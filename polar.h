@@ -330,12 +330,12 @@ struct PolarData {
             if ( bPbPb and ((*evt.mva)[i] < mvaCut) ) continue;
             if ( ((*evt.pt)[i] < pTbin[0]) or ((*evt.pt)[i] > pTbin[NpT]) ) continue;
             if ( bForward_ ) {
-                if ( ( abs((*evt.eta)[i]) < 1.0 ) or ( abs((*evt.eta)[i]) > 2.0 ) ) continue;
+                if ( ( abs((*evt.rapidity)[i]) < 1.0 ) or ( abs((*evt.rapidity)[i]) > 2.0 ) ) continue;
             } else {
-                if ( ( abs((*evt.eta)[i]) > 1.0 ) ) continue;
+                if ( ( abs((*evt.rapidity)[i]) > 1.0 ) ) continue;
             }
             NLm++;
-            hLambdaEta_[cent]->Fill( (*evt.eta)[i] );
+            hLambdaEta_[cent]->Fill( (*evt.rapidity)[i] );
 
             int ipt = 0;
             while ( (*evt.pt)[i] > pTbin[ipt+1] ) ipt++;
@@ -352,7 +352,7 @@ struct PolarData {
                 // Lambda
                 double cosTheta = (*evt.pPzCM)[i] / sqrt( (*evt.pPzCM)[i]*(*evt.pPzCM)[i] + (*evt.pPxCM)[i]*(*evt.pPxCM)[i] + (*evt.pPyCM)[i]*(*evt.pPyCM)[i] );
                 hLambdaMass_[cent][ipt]->Fill( (*evt.mass)[i] );
-                if ( (*evt.eta)[i] > 0 ) {
+                if ( (*evt.rapidity)[i] > 0 ) {
                     // P-side
                     hLambdaMassP_[cent][ipt]->Fill( (*evt.mass)[i] );
                     hLambdaP2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );
@@ -394,7 +394,7 @@ struct PolarData {
                 // anti-Lambda
                 double cosTheta = (*evt.nPzCM)[i] / sqrt( (*evt.nPzCM)[i]*(*evt.nPzCM)[i] + (*evt.nPxCM)[i]*(*evt.nPxCM)[i] + (*evt.nPyCM)[i]*(*evt.nPyCM)[i] );
                 hLamBarMass_[cent][ipt]->Fill( (*evt.mass)[i] );
-                if ( (*evt.eta)[i] > 0 ) {
+                if ( (*evt.rapidity)[i] > 0 ) {
                     // P-side
                     hLamBarMassP_[cent][ipt]->Fill( (*evt.mass)[i] );
                     hLamBarP2Cos_ [cent][ipt]->Fill( (*evt.mass)[i], cosTheta*TMath::Sin( 2*Dphi_m2 ) );

@@ -1,8 +1,11 @@
 #include <TColor.h>
 #include <TH1D.h>
+#include <TH2D.h>
+#include <TCanvas.h>
 #include <TFile.h>
 #include <TGraphErrors.h>
 #include <TMath.h>
+#include "../../style.h"
 
 #include "const.h"
 
@@ -11,6 +14,14 @@ TColor *green = new TColor(3002, 0, 0.5, 0, "green", 0.4);
 TColor *blue = new TColor(3003, 0, 0, 1, "blue", 0.4);
 TColor *gray = new TColor(3005, 0, 0, 0, "black", 0.4);
 
+
+void setGr(TGraphErrors* gr, int kstyle, int kcolor, int ksz = 2)
+{
+    gr->SetMarkerStyle(kstyle);
+    gr->SetMarkerColor(kcolor);
+    gr->SetLineColor(kcolor);
+    gr->SetMarkerSize(ksz);
+}
 
 void GrFilter(TGraphErrors* gr)
 {
@@ -34,10 +45,10 @@ struct GrData {
     void Write(TFile * f) {
         f->cd();
         for ( int c = bpPb?6:0; c < (bpPb?NCentpPb2016:NCentPbPb2018Rebin); c++ ) {
-            GrFilter( grSig  [c] );
-            GrFilter( grSBNeg[c] );
-            GrFilter( grSBPos[c] );
-            GrFilter( grSB   [c] );
+//            GrFilter( grSig  [c] );
+//            GrFilter( grSBNeg[c] );
+//            GrFilter( grSBPos[c] );
+//            GrFilter( grSB   [c] );
             grSig  [c]->Write(Form("%sSig_%i", Name.Data(), c));
             grSBNeg[c]->Write(Form("%sSBNeg_%i", Name.Data(), c));
             grSBPos[c]->Write(Form("%sSBPos_%i", Name.Data(), c));
@@ -45,12 +56,47 @@ struct GrData {
         }
     };
 
+    void GrDump(TString dir = "", TString option = "vn")
+    {
+        TH2D* hframe = nullptr;
+        if ( option == "vn" ) {
+            hframe = new TH2D("hframe", "hframe", 1, 0, 10, 1, -0.1, 0.35);
+            InitHist(hframe, "p_{T} (GeV/c)", "v_{n}");
+        }
+        if ( option == "cos2" ) {
+            hframe = new TH2D("hframe", "hframe", 1, 0, 10, 1, -0.1, 0.55);
+            InitHist(hframe, "p_{T} (GeV/c)", "<cos(#theta)^2>");
+        }
+        TCanvas * cT = MakeCanvas("cT", "cT", 600, 500);
+        for ( int c = bpPb?6:0; c < (bpPb?NCentpPb2016:NCentPbPb2018Rebin); c++ ) {
+            setGr( grSig[c], kFullSquare, kBlue );
+            setGr( grSB [c], kOpenSquare, kRed  );
+            hframe->Draw();
+            grSig[c]->Draw("psame");
+            grSB [c]->Draw("psame");
+            cT->SaveAs( (dir + "/" + Name + c + ".pdf" ).Data() );
+        }
+        delete hframe;
+        delete cT;
+    };
+
+    GrData(bool b, TFile *f, TString name) :
+        bpPb(b),
+        Name(name)
+    {
+        f->cd();
+        for ( int c = (bpPb?6:0); c < (bpPb?NCentpPb2016:NCentPbPb2018Rebin); c++ ) {
+            grSig  [c] = (TGraphErrors*) f->Get(Form("%sSig_%i", Name.Data(), c));
+            grSBNeg[c] = (TGraphErrors*) f->Get(Form("%sSBNeg_%i", Name.Data(), c));
+            grSBPos[c] = (TGraphErrors*) f->Get(Form("%sSBPos_%i", Name.Data(), c));
+            grSB   [c] = (TGraphErrors*) f->Get(Form("%sSB_%i", Name.Data(), c));
+        }
+    };
+
     GrData(bool b, vector<vector<TH1D*>> &h, TString name) :
         bpPb(b),
         Name(name)
     {
-        bpPb = b;
-
         for ( int c = (bpPb?6:0); c < (bpPb?NCentpPb2016:NCentPbPb2018Rebin); c++ ) {
             grSig  [c] = new TGraphErrors(NpT);
             grSBNeg[c] = new TGraphErrors(NpT);
@@ -83,9 +129,12 @@ struct GrData {
                 double pos_w2 = grSBPos[c]->GetEY()[i] * grSBPos[c]->GetEY()[i];
                 double neg_w2 = grSBNeg[c]->GetEY()[i] * grSBNeg[c]->GetEY()[i];
                 double sum = (grSBPos[c]->GetY()[i] / pos_w2 + grSBNeg[c]->GetY()[i] / neg_w2) / (1./pos_w2 + 1./neg_w2);
-                if ( (pos_w2==0.) or (neg_w2) ) {
+                if ( (pos_w2==0.) or (neg_w2==0.) ) {
                     grSB[c]->GetY()[i] = -999.;
                     grSB[c]->GetEY()[i] = 9999.;
+                } else {
+                    grSB[c]->GetY()[i] = sum;
+                    grSB[c]->GetEY()[i]= 1. / sqrt( 1./pos_w2 + 1./neg_w2 );
                 }
             }
         }
@@ -206,14 +255,6 @@ void DropPoints( TGraphErrors* gr, int N )
             gr->RemovePoint(gr->GetN()-1);
         }
     }
-}
-
-void setGr(TGraphErrors* gr, int kstyle, int kcolor, int ksz = 2)
-{
-    gr->SetMarkerStyle(kstyle);
-    gr->SetMarkerColor(kcolor);
-    gr->SetLineColor(kcolor);
-    gr->SetMarkerSize(ksz);
 }
 
 TGraphErrors * getGr(TFile *f, string s, int kstyle, int kcolor, int ksz = 2)
