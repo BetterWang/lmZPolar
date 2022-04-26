@@ -82,6 +82,13 @@ void process(int s1 = 0, int s3 = 10, int sVz = 0, double mvaCut = 0.20)
     {
         if ( !(ievt%1000000) ) cout << "!! ievt = " << ievt << endl;
 
+        if ( sVz > 0 ) {
+            if ( (sVz==1) && (fabs(evt.vz) > 3.0) ) continue;
+            if ( (sVz==2) && (fabs(evt.vz) <= 3.0) ) continue;
+            if ( (sVz==3) && (evt.vz>0.) ) continue;
+            if ( (sVz==4) && (evt.vz<0.) ) continue;
+        }
+
         int s2 = ievt%s3;
         //data[s2]->Fill(evt);
         int ret = data[s3]->Fill(evt, mvaCut);
